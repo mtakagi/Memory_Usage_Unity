@@ -19,9 +19,17 @@ public class test : MonoBehaviour
     [DllImport("allocation")]
 #endif
     private static extern void deallocation();
+    
+#if UNITY_IOS && !UNITY_EDITOR
+    [DllImport("__Internal")]
+    private static extern long available_memory();
+#endif
 
     [SerializeField]
     private Text memoryUsage;
+
+    [SerializeField]
+    private Text availableMemory;
 
     // Update is called once per frame
     void Update()
@@ -36,6 +44,10 @@ public class test : MonoBehaviour
         {
             memoryUsage.text = e.Message;
         }
+#endif
+#if UNITY_IOS && !UNITY_EDITOR
+        var available = available_memory();
+        availableMemory.text = $"{available / (1024 * 1024)}MB";
 #endif
     }
 
